@@ -15,21 +15,24 @@ for (var i = 0; i < number.length; i++) {
     var lastChar = currentString[currentString.length - 1];
 
     // if result is not diplayed, just keep adding
-    if (resultDisplayed === false) {
-      input.innerHTML += e.target.innerHTML;
-    } else if (resultDisplayed === true && lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
-      // if result is currently displayed and user pressed an operator
-      // we need to keep on adding to the string for next operation
-      resultDisplayed = false;
-      input.innerHTML += e.target.innerHTML;
-    } else {
-      // if result is currently displayed and user pressed a number
-      // we need clear the input string and add the new input to start the new opration
-      resultDisplayed = false;
-      input.innerHTML = "";
-      input.innerHTML += e.target.innerHTML;
-    }
+    
 
+    if(!(currentString.indexOf(".")>-1 && e.target.innerHTML.indexOf(".")>-1)){
+      if (resultDisplayed === false) {
+        input.innerHTML += e.target.innerHTML;
+      } else if (resultDisplayed === true && lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
+        // if result is currently displayed and user pressed an operator
+        // we need to keep on adding to the string for next operation
+        resultDisplayed = false;
+        input.innerHTML += e.target.innerHTML;
+      } else {
+        // if result is currently displayed and user pressed a number
+        // we need clear the input string and add the new input to start the new operation
+        resultDisplayed = false;
+        input.innerHTML = "";
+        input.innerHTML += e.target.innerHTML;
+      }
+    }
   });
 }
 
@@ -40,22 +43,30 @@ for (var i = 0; i < operator.length; i++) {
     // storing current input string and its last character in variables - used later
     var currentString = input.innerHTML;
     var lastChar = currentString[currentString.length - 1];
-
-    // if last character entered is an operator, replace it with the currently pressed one
-    if (lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
-      var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
-      input.innerHTML = newString;
-    } else if (currentString.length == 0) {
-      // if first key pressed is an opearator, don't do anything
-      console.log("enter a number first");
-    } else {
-      // else just add the operator pressed to the input
-      input.innerHTML += e.target.innerHTML;
-    }
-
-  });
-}
-
+    
+    console.log("current string >> " + currentString);
+    console.log("currentString.indexO >>" + currentString.indexOf("x"));
+    
+    if(currentString.indexOf("+")>0 || currentString.indexOf("-")>0 || currentString.indexOf("×")>0
+     || currentString.indexOf("÷")>0){
+      //do nothing
+      console.log("block num 1");
+    }else{
+      console.log("second block");
+      // if last character entered is an operator, replace it with the currently pressed one
+      if (lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
+        var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
+        input.innerHTML = newString;
+      } else if (currentString.length == 0) {
+        // if first key pressed is an opearator, don't do anything
+        console.log("enter a number first");
+      } else {
+        // else just add the operator pressed to the input
+        input.innerHTML += e.target.innerHTML;
+      }
+    } 
+  })
+  }  
 // on click of 'equal' button
 result.addEventListener("click", function() {
 
@@ -74,6 +85,7 @@ result.addEventListener("click", function() {
   console.log(numbers);
   console.log("----------------------------");
 
+
   // now we are looping through the array and doing one operation at a time.
   // first divide, then multiply, then subtraction and then addition
   // as we move we are alterning the original numbers and operators array
@@ -83,26 +95,26 @@ result.addEventListener("click", function() {
 // console.log(numbers[1]);
 // console.log(parseFloat(numbers[0]));
 // console.log(parseFloat(numbers[1]));
-    var computation;
-    const prev = parseFloat(numbers[0]);
-    const current = parseFloat(numbers[1]);
-    if (isNaN(prev) || isNaN(current)) return;
-    switch (operators[0]) {
-      case '+':
-        computation = prev + current;
-        break;
-      case '-':
-        computation = prev - current;
-        break
-      case '×':
-        computation = prev * current;
-        break
-      case '÷':
-        computation = prev / current;
-        break;
-      default:
-        return;
-    }
+  var computation;
+  const prev = parseFloat(numbers[0]);
+  const current = parseFloat(numbers[1]);
+  if (isNaN(prev) || isNaN(current)) return;
+  switch (operators[0]) {
+    case '+':
+      computation = prev + current;
+      break;
+    case '-':
+      computation = prev - current;
+      break
+    case '×':
+      computation = prev * current;
+      break
+    case '÷':
+      computation = prev / current;
+      break;
+    default:
+      return;
+  }
   
 // document.getElementById("result").innerHTML = parseFloat(number[0]) * parseFloat(number[1])
   // var result = buttons.indexOf("=");
@@ -113,11 +125,8 @@ result.addEventListener("click", function() {
   input.innerHTML = computation; // displaying the output
   console.log(computation);
   resultDisplayed = true; // turning flag if result is displayed
+  });
+  clear.addEventListener("click", function(e) {
+    input.innerHTML = "";
+    });
 
-
-});
-
-// clearing the input on press of clear
-clear.addEventListener("click", function() {
-  input.innerHTML = "";
-})
